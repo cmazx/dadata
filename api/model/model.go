@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 // Определите, нужна ли дополнительная проверка оператором, используя код качества (qc):
 const (
 	QCSuccess = 0 // Исходное значение распознано уверенно. Не требуется ручная проверка.
@@ -312,13 +314,37 @@ type (
 			Name string `json:"name"`
 		} `json:"okveds"`
 		Authorities string           `json:"authorities"`
-		Documents   string           `json:"documents"`
+		Documents   *PartyDocuments  `json:"documents"`
 		Licenses    string           `json:"licenses"`
 		Address     *AddressResponse `json:"address"`
 		Phones      string           `json:"phones"`
 		Emails      string           `json:"emails"`
 		OgrnDate    int64            `json:"ogrn_date"`
 		OkvedType   string           `json:"okved_type"`
+	}
+
+	PartyDocuments struct {
+		FTSReport       PartyRegistrationDocument `json:"fts_report"`
+		FTSRegistration PartyRegistrationDocument `json:"fts_registration"`
+		PFRegistration  PartyRegistrationDocument `json:"pf_registration"`
+		SIFRegistration PartyRegistrationDocument `json:"sif_registration"`
+		SMB             PartySMB                  `json:"smb"`
+	}
+
+	PartyRegistrationDocument struct {
+		//type =FTS_REGISTRATION|FTS_REPORT|PF_REGISTRATION|SIF_REGISTRATION
+		Type           string    `json:"type"`
+		Series         string    `json:"series"`
+		Number         string    `json:"number"`
+		IssueDate      time.Time `json:"issue_date"`
+		IssueAuthority string    `json:"issue_authority"`
+	}
+
+	PartySMB struct {
+		//type =SMB
+		Type      string    `json:"type"`
+		Category  string    `json:"category"`
+		IssueDate time.Time `json:"issue_date"`
 	}
 
 	// Country base struct for dadata.Country
